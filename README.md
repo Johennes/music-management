@@ -18,7 +18,7 @@ the folder is skipped (unless -f is specified).
   -h    Show this message and exit
 ```
 
-## generate-covers
+## generate-covers.sh
 
 A Bash script for batch-converting artwork TIFs to cover JPGs per folder. I use TIFs for archiving scans but they are unsuitable for displaying cover art in media players. For one thing, at 300 DPI they are way bigger than needed. For another, most media players assume covers to be stored in e.g. `cover.jpg` which doesn't match my artwork naming pattern.
 
