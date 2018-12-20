@@ -84,4 +84,4 @@ while read -r DIR; do
         metaflac --show-tag=REPLAYGAIN_TRACK_GAIN "${FILE}"
         metaflac --show-tag=REPLAYGAIN_ALBUM_GAIN "${FILE}"
     done < <(find "${DIR}" -maxdepth 1 -name "*.flac")
-done < <(find "$1" -type d)
+done < <(find -L "$1" -type d)
