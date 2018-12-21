@@ -7,7 +7,7 @@ A set of tools and configurations I use for managing my digital collection of mu
 A Bash script for batch-computing and writing ReplayGain tags. Only FLAC files are supported currently.
 
 ```
-Usage: add-replay-gain directory
+Usage: add-replay-gain.sh [-f] directory
 
 Recursively walks over the specified directory and its
 subdirectories and adds ReplayGain tags to FLACs in every
@@ -42,7 +42,7 @@ installed yet, the script offers to link it.
 A Bash script for batch-converting artwork TIFs to cover JPGs per folder. I use TIFs for archiving scans but they are unsuitable for displaying cover art in media players. For one thing, at 300 DPI they are way bigger than needed. For another, most media players assume covers to be stored in e.g. `cover.jpg` which doesn't match my artwork naming pattern.
 
 ```
-Usage: generate-covers
+Usage: generate-covers.sh [-f] directory
 
 Recursively walks over the specified directory and its
 subdirectories and creates cover.jpg files from artwork TIFs.

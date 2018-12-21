@@ -3,7 +3,7 @@
 # Usage Info
 
 function usage {
-    echo "Usage: generate-covers"
+    echo "Usage: generate-covers.sh [-f] directory"
     echo ""
     echo "Recursively walks over the specified directory and its"
     echo "subdirectories and creates cover.jpg files from artwork TIFs."
