@@ -77,8 +77,10 @@ fi
 
 # File Processing
 
-echo "Processing files in $1..."
+DIR=$(cd "$1"; pwd -P)
 
-pushd "$1" > /dev/null
+echo "Processing files in ${DIR}..."
+
+pushd "${DIR}" > /dev/null
 gimp -i -b '(batch-auto-white-balance "*.tif")' -b '(gimp-quit 0)'
 popd > /dev/null
