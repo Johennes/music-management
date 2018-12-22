@@ -53,3 +53,17 @@ skipped (unless -f is specified).
   -f    Force regeneration and overwrite existing JPGs
   -h    Show this message and exit
 ```
+
+## tif2jpg.sh
+
+A Bash script for converting TIFs to JPGs for temporary actions. I use this to convert artwork TIFs for upload to MusicBrainz which doesn't accept TIFs.
+
+```
+Usage: tif2jpg.sh directory
+
+Uses ImageMagick to convert TIFs to JPGs in the specified
+directory. If confirmed, the JPGs are removed again at the
+end.
+
+  -h    Show this message and exit
+```
