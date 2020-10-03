@@ -1,5 +1,7 @@
 # Music Management
 
+*Mirrors: [GitHub] ~ [GitLab]*
+
 A set of tools and configurations I use for managing my digital collection of music
 
 ## add-replay-gain.sh
@@ -67,3 +69,6 @@ end.
 
   -h    Show this message and exit
 ```
+
+[GitHub]: https://github.com/Johennes/music-management
+[GitLab]: https://gitlab.com/cherrypicker/music-management
