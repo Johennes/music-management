@@ -3,7 +3,7 @@
 # Usage Info
 
 function usage {
-    echo "Usage: add-replay-gain.sh [-f] directory"
+    echo "Usage: add-replay-gain [-f] directory"
     echo ""
     echo "Recursively walks over the specified directory and its"
     echo "subdirectories and adds ReplayGain tags to FLACs in every"

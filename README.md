@@ -2,12 +2,12 @@
 
 A set of tools and configurations I use for managing my digital collection of music
 
-## add-replay-gain.sh
+## add-replay-gain
 
 A Bash script for batch-computing and writing ReplayGain tags. Only FLAC files are supported currently.
 
 ```
-Usage: add-replay-gain.sh [-f] directory
+Usage: add-replay-gain [-f] directory
 
 Recursively walks over the specified directory and its
 subdirectories and adds ReplayGain tags to FLACs in every
@@ -18,12 +18,12 @@ the folder is skipped (unless -f is specified).
   -h    Show this message and exit
 ```
 
-## auto-white-balance.sh / auto-white-balance.scm
+## auto-white-balance / auto-white-balance.scm
 
 Performs GIMPs automatic white balance operation in batch mode. I found this to generally have a positive effect on the brightness and contrast of artwork scans.
 
 ```
-Usage: auto-white-balance.sh directory
+Usage: auto-white-balance directory
 
 Uses GIMP batch mode to peform an automatic white balance
 operation (which effectively is an RGB level stretch) on all
@@ -37,12 +37,12 @@ installed yet, the script offers to link it.
   -h    Show this message and exit
 ```
 
-## generate-covers.sh
+## generate-covers
 
 A Bash script for batch-converting artwork TIFs to cover JPGs per folder. I use TIFs for archiving scans but they are unsuitable for displaying cover art in media players. For one thing, at 300 DPI they are way bigger than needed. For another, most media players assume covers to be stored in e.g. `cover.jpg` which doesn't match my artwork naming pattern.
 
 ```
-Usage: generate-covers.sh [-f] directory
+Usage: generate-covers [-f] directory
 
 Recursively walks over the specified directory and its
 subdirectories and creates cover.jpg files from artwork TIFs.
@@ -54,12 +54,12 @@ skipped (unless -f is specified).
   -h    Show this message and exit
 ```
 
-## tif2jpg.sh
+## tif2jpg
 
 A Bash script for converting TIFs to JPGs for temporary actions. I use this to convert artwork TIFs for upload to MusicBrainz which doesn't accept TIFs.
 
 ```
-Usage: tif2jpg.sh directory
+Usage: tif2jpg directory
 
 Uses ImageMagick to convert TIFs to JPGs in the specified
 directory. If confirmed, the JPGs are removed again at the

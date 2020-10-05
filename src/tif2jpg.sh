@@ -3,7 +3,7 @@
 # Usage Info
 
 function usage {
-    echo "Usage: tif2jpg.sh directory"
+    echo "Usage: tif2jpg directory"
     echo ""
     echo "Uses ImageMagick to convert TIFs to JPGs in the specified"
     echo "directory. If confirmed, the JPGs are removed again at the"

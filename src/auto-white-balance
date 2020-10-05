@@ -3,7 +3,7 @@
 # Usage Info
 
 function usage {
-    echo "Usage: auto-white-balance.sh directory"
+    echo "Usage: auto-white-balance directory"
     echo ""
     echo "Uses GIMP batch mode to peform an automatic white balance"
     echo "operation (which effectively is an RGB level stretch) on all"
