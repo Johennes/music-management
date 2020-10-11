@@ -1,0 +1,133 @@
+#!/bin/bash
+
+red='\033[0;31m'
+nocolor='\033[0m'
+
+function usage {
+    echo "Usage: music2phone directory"
+    echo ""
+    echo "Copy music from the supplied directory to a connected smartphone. FLAC files are"
+    echo "converted to high-quality MP3s before copying. Directories are recursed."
+    echo ""
+    echo "  -h    Show this message and exit"
+}
+
+while getopts ":h" OPT; do
+    case "${OPT}" in
+        *)
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+function get_flac_tag {
+	metaflac "$1" --show-tag=$2 | sed s/.*=//g
+}
+
+phone_dir=/run/user/$(id -u)/gvfs
+phone_base=$(basename "${phone_dir}"/mtp* | head -n1)
+phone_storage=$(basename "${phone_dir}/${phone_base}/Intern"* | head -n1)
+phone_music="${phone_dir}/${phone_base}/${phone_storage}/Music"
+
+if [[ ! -d "${phone_music}" ]]; then
+    echo -e "${red}Error: Target directory on phone ${phone_music} does not exist${nocolor}"
+    exit 1
+fi
+
+if [[ ! -d "$1" ]]; then
+    echo -e "${red}Error: No such directory $1${nocolor}"
+    exit 1
+fi
+    
+while read -r folder; do
+    echo -e "Scanning ${folder}..."
+
+    first=$(ls "${folder}" | grep -E "*.flac" | head -n 1)
+    if [[ -z "${first}" ]]; then
+        first=$(ls "${folder}" | grep -E "*.mp3" | head -n 1)
+        if [[ -z "${first}" ]]; then
+            echo -e "\t${red}Error: No FLAC or MP3 files in directory ${folder}${nocolor}"
+            continue
+        fi
+    fi
+
+    echo -e "\tPreparing target directory..."
+
+    if [[ "${first}" =~ .*\.flac ]]; then
+        artist=$(get_flac_tag "${folder}/${first}" ARTIST)
+        album=$(get_flac_tag "${folder}/${first}" ALBUM)
+    else
+        artist=$(mid3v2 -l "${folder}/${first}" | grep TPE1= | sed s/.*=//g)
+        album=$(mid3v2 -l "${folder}/${first}" | grep TALB= | sed s/.*=//g)
+    fi
+
+    TARGET=${phone_music}/${artist}
+    if [[ ! -z "${album}" ]]; then
+        TARGET=${TARGET}/${album}
+    fi
+
+    rm -rf "${TARGET}"
+    mkdir -p "${TARGET}" || exit 1
+
+    echo -e "\tCopying cover (if any)..."
+
+    if [[ -e "${folder}/cover.jpg" ]]; then
+        cp "${folder}/cover.jpg" "${TARGET}" 2>/dev/null
+    fi
+
+    while read -r mp3_file; do
+        echo -e "\tSyncing $(basename "${mp3_file}")..."
+        cp "${mp3_file}" "${TARGET}" 2>/dev/null
+    done < <(find "${folder}" -maxdepth 1 -type f -name "*.mp3" | sort)
+
+    while read -r flac_file; do
+        echo -e "\tSyncing $(basename "${flac_file}")..."
+
+        mp3_file=${flac_file%.flac}.mp3
+        if [[ -e "${mp3_file}" ]]; then
+            echo -e "\t\t${red}Error: Output file already exists${nocolor}"
+            continue
+        fi
+
+        echo -e "\t\tRe-encoding FLAC to MP3..."
+
+        title=$(get_flac_tag "${flac_file}" TITLE)
+        track=$(get_flac_tag "${flac_file}" TRACKNUMBER)
+        date=$(get_flac_tag "${flac_file}" DATE)
+
+        flac --totally-silent -cd "${flac_file}" | lame \
+            --silent \
+            --noreplaygain \
+            -V0 \
+            --add-id3v2 \
+            --pad-id3v2 \
+            --ignore-tag-errors \
+            --ta "${artist}" \
+            --tt "${title}" \
+            --tl "${album}" \
+            --tn "${track}" \
+            --ty "${date}" \
+            - "${mp3_file}"
+
+        echo -e "\t\tCopying ReplayGain tags..."
+
+        album_gain=$(get_flac_tag "${flac_file}" REPLAYGAIN_ALBUM_GAIN)
+        album_peak=$(get_flac_tag "${flac_file}" REPLAYGAIN_ALBUM_PEAK)
+        track_gain=$(get_flac_tag "${flac_file}" REPLAYGAIN_TRACK_GAIN)
+        track_peak=$(get_flac_tag "${flac_file}" REPLAYGAIN_TRACK_PEAK)
+        reference_loudness=$(get_flac_tag "${flac_file}" REPLAYGAIN_REFERENCE_LOUDNESS)
+
+        mid3v2 --TXX "replaygain_album_gain:${album_gain}" "${mp3_file}"
+        mid3v2 --TXX "replaygain_album_peak:${album_peak}" "${mp3_file}"
+        mid3v2 --TXX "replaygain_track_gain:${track_gain}" "${mp3_file}"
+        mid3v2 --TXX "replaygain_track_peak:${track_peak}" "${mp3_file}"
+        mid3v2 --TXX "replaygain_reference_loudness:${reference_loudness}" "${mp3_file}"
+
+        echo -e "\t\tPutting output file into place..."
+
+        mv "${mp3_file}" "${TARGET}" 2>/dev/null
+    done < <(find "${folder}" -maxdepth 1 -type f -name "*.flac" | sort)
+done < <(find "$1" -type d)

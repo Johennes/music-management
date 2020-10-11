@@ -54,6 +54,20 @@ skipped (unless -f is specified).
   -h    Show this message and exit
 ```
 
+## music2phone
+
+A Bash script for copying music onto my phone for listening on the go. Recurses
+directories and converts FLAC to MP3 (while retaining relevant tags) where needed.
+
+```
+Usage: music2phone directory
+
+Copy music from the supplied directory to a connected smartphone. FLAC files are
+converted to high-quality MP3s before copying. Directories are recursed.
+
+  -h    Show this message and exit
+```
+
 ## tif2jpg
 
 A Bash script for converting TIFs to JPGs for temporary actions. I use this to convert artwork TIFs for upload to MusicBrainz which doesn't accept TIFs.
