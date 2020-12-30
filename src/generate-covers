@@ -59,16 +59,11 @@ while read -r DIR; do
     if ! ${FORCE} && [[ -f "${DIR}/cover.jpg" ]]; then
         echo "Cover already exists, skipping directory"
     else
-        CONVERTED=false
-        for TIF in "${DIR}"/*.tif; do
-            if [[ -f "${TIF}" && "${TIF}" =~ .*(booklet|cover|front).* ]]; then
-                echo "Converting ${TIF}..."
-                convert "${TIF}" "${DIR}/cover.jpg"
-                CONVERTED=true
-                break
-            fi
-        done
-        if ! ${CONVERTED}; then
+        TIF=$(find "${DIR}" -name "*.tif" | sort -V | head -n1)
+        if [[ ! -z "${TIF}" ]]; then
+            echo "Converting ${TIF}..."
+            convert "${TIF}" "${DIR}/cover.jpg"
+        else
             echo "No cover art TIF found, skipping directory"
         fi
     fi
